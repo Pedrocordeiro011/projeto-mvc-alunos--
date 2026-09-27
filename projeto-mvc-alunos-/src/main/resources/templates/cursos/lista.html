@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Cursos</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="container">
+    <header class="topo">
+        <div>
+            <h1>Cadastro de Cursos</h1>
+            <p>Cursos oferecidos pela escola</p>
+        </div>
+        <a class="botao" th:href="@{/cursos/novo}">Novo curso</a>
+    </header>
+
+    <div th:replace="~{fragmentos/nav :: nav('cursos')}"></div>
+    <div th:replace="~{fragmentos/alertas :: alertas}"></div>
+
+    <section class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Carga horária</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="curso : ${cursos}">
+                <td th:text="${curso.id}">1</td>
+                <td th:text="${curso.nome}">Desenvolvimento de Sistemas</td>
+                <td th:text="${curso.descricao}">Curso técnico</td>
+                <td th:text="${curso.cargaHoraria} + ' h'">1200 h</td>
+                <td class="acoes">
+                    <a class="botao secundario" th:href="@{/cursos/editar/{id}(id=${curso.id})}">Editar</a>
+
+                    <form th:action="@{/cursos/excluir/{id}(id=${curso.id})}" method="post">
+                        <button class="botao perigo" type="submit">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p class="vazio" th:if="${#lists.isEmpty(cursos)}">Nenhum curso cadastrado.</p>
+    </section>
+</main>
+</body>
+</html>

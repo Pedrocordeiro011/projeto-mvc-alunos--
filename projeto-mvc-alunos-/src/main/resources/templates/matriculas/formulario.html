@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrícula</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="container estreito">
+    <header class="topo">
+        <div>
+            <h1 th:text="${matricula.id == null ? 'Nova matrícula' : 'Editar matrícula'}">Nova matrícula</h1>
+            <p>Relacione um aluno a um curso.</p>
+        </div>
+    </header>
+
+    <div th:replace="~{fragmentos/nav :: nav('matriculas')}"></div>
+    <div th:replace="~{fragmentos/alertas :: alertas}"></div>
+
+    <section class="card">
+        <form th:action="@{/matriculas/salvar}" th:object="${matricula}" method="post" class="formulario">
+            <input type="hidden" th:field="*{id}">
+
+            <label for="aluno">Aluno</label>
+            <select id="aluno" name="aluno.id" required>
+                <option value="">Selecione um aluno</option>
+                <option th:each="a : ${alunos}"
+                        th:value="${a.id}"
+                        th:text="${a.nome + ' (RG: ' + a.rg + ')'}"
+                        th:selected="${matricula.aluno != null and matricula.aluno.id == a.id}">
+                    Ana Souza
+                </option>
+            </select>
+
+            <label for="curso">Curso</label>
+            <select id="curso" name="curso.id" required>
+                <option value="">Selecione um curso</option>
+                <option th:each="c : ${cursos}"
+                        th:value="${c.id}"
+                        th:text="${c.nome}"
+                        th:selected="${matricula.curso != null and matricula.curso.id == c.id}">
+                    Desenvolvimento de Sistemas
+                </option>
+            </select>
+
+            <label for="dataMatricula">Data da matrícula</label>
+            <input id="dataMatricula" type="date" th:field="*{dataMatricula}">
+
+            <div th:if="${matricula.id != null}">
+                <label for="status">Status</label>
+                <select id="status" th:field="*{status}">
+                    <option th:each="s : ${statusList}" th:value="${s}" th:text="${s}">ATIVA</option>
+                </select>
+            </div>
+
+            <div class="acoes-formulario">
+                <a class="botao secundario" th:href="@{/matriculas}">Cancelar</a>
+                <button class="botao" type="submit">Salvar</button>
+            </div>
+        </form>
+    </section>
+</main>
+</body>
+</html>
